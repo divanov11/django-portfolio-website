@@ -1,0 +1,15 @@
+{% extends 'base/main.html' %}
+{% load static %}
+{% block content %}
+
+<div class="main-container">
+	<form method="POST" action="">
+		{% csrf_token %}
+
+		<p>Are you sure you want to delete {{item}}?</p>
+		<a class="btn btn-primary" href="{% url 'posts' %}">&laquo Back to Posts</a>
+		<input class="btn btn-danger" type="submit" value="Confirm">
+	</form>
+</div>
+
+{% endblock content %}

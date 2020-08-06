@@ -1,0 +1,104 @@
+{% extends 'base/main.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+<style type="text/css">
+	#div_id_tags, #id_tags{
+		overflow-y: scroll;
+		max-height: 100px;
+		border-radius: 5px;
+		padding: 5px;
+		border:1px solid #888;
+	}
+</style>
+
+<div class="main-container">
+	<h1>Posts</h1>
+
+	<form id="searchForm" method="GET">
+		{{myFilter.form|crispy}}
+		<input class="btn btn-primary" type="submit" value="search">
+	</form>
+
+	<div class="post-wrapper">
+
+		{% for post in posts %}
+		<div>
+			<div class="post">
+				<img class="thumbnail" src="{{post.thumbnail.url}}">
+				<div class="post-preview">
+					<h6 class="post-title">{{post.headline}}</h6>
+					<p class="post-intro">{{post.sub_headline}}</p>
+					<a href="{% url 'post' post.slug %}">Read More</a>
+
+					{% if request.user.is_authenticated %}
+						| <a href="{% url 'update_post' post.slug %}">Edit</a>
+						| <a href="{% url 'delete_post' post.slug %}">Delete</a>
+					{% endif %}
+					<hr>
+					{% for tag in post.tags.all %}
+						<span class="tag">{{tag}}</span>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+		{% empty %}
+			<h3>No posts found...</h3>
+		{% endfor %}
+	</div>
+
+	<div class="row">
+		
+		{% if posts.has_other_pages %}
+
+			<ul class="pagination">
+
+				{% if posts.has_previous %}
+					<li class="page-item"><a data-page="{{posts.previous_page_number}}" href="?page={{posts.previous_page_number}}" class="page-link">&laquo</a></li>
+
+					<li class="page-item"><a data-page="1" href="?page=1" class="page-link">First</a></li>
+				{% endif %}
+
+
+				{% for i in posts.paginator.page_range %}
+					{% if posts.number == i %}
+						<li class="page-item"><a class="active page-link">{{i}}</a></li>
+					{% else %}
+						<li class="page-item"><a data-page="{{i}}" href="?page={{i}}" class="page-link">{{i}}</a></li>
+					{% endif %}
+					
+				{% endfor %}
+
+
+				{% if posts.has_next %}
+					<li class="page-item"><a data-page="{{posts.paginator.num_pages}}" href="?page={{posts.paginator.num_pages}}" class="page-link">Last</a></li>
+
+					<li class="page-item"><a data-page="{{posts.next_page_number}}" href="?page={{posts.next_page_number}}" class="page-link">&raquo</a></li>
+				{% endif %}
+			</ul>
+
+		{% endif %}
+	</div>
+</div>
+
+
+<script type="text/javascript">
+	let searchForm = document.getElementById('searchForm')
+	let pageLinks = document.getElementsByClassName('page-link')
+
+	for(var i=0; pageLinks.length > i; i++){
+
+		pageLinks[i].addEventListener('click', function(e){
+			e.preventDefault()
+			let page = this.dataset.page
+			console.log('Page:', page)
+			searchForm.innerHTML += `<input value="${page}" name="page" hidden >`
+			searchForm.submit()
+		})
+
+	}
+</script>
+
+{% endblock content %}

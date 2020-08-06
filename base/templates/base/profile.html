@@ -1,0 +1,80 @@
+{% extends 'base/main.html' %}
+{% load static %}
+{% block content %}
+
+<style type="text/css">
+	.profile_intro{
+		display: flex;
+		align-items: center;
+		margin: 20px;
+		flex-wrap: wrap;
+	}
+
+	.profile_intro div{
+		min-width: 200px;
+		max-width: 800px;
+	}
+
+	.profile_pic{
+		display: block;
+		width: 130px;
+		height: 130px;
+		border-radius: 50%;
+	}
+
+	.post-preview{
+		width: 150px;
+	}
+</style>
+
+<div class="main-container">
+
+	<div class="profile_intro">
+		<div>
+			<img class="profile_pic" src="{% static 'images/dennis.jpg' %}">
+			<br>
+			<p>myemail@gmail.com</p>
+		</div>
+
+
+		<div>
+			<h3>Full Name</h3>
+			<p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book</p>
+		</div>
+	</div>
+	
+	<table class="table">
+		<thead class="thead-dark">
+			<tr>
+				<th></th>
+				<th>Title</th>
+				<th>Date Posted</th>
+				<th>View</th>
+			</tr>
+		</thead>
+
+		<tr>
+			<td><img class="post-preview" src="{% static 'images/dash.jpg' %}"></td>
+			<td>Post #1</td>
+			<td>11-29-2020</td>
+			<td><a class="btn btn-sm btn-dark" href="#">View Post</a></td>
+		</tr>
+
+		<tr>
+			<td><img class="post-preview" src="{% static 'images/dash.jpg' %}"></td>
+			<td>Post #2</td>
+			<td>11-29-2020</td>
+			<td><a class="btn btn-sm btn-dark" href="#">View Post</a></td>
+		</tr>
+
+		<tr>
+			<td><img class="post-preview" src="{% static 'images/dash.jpg' %}"></td>
+			<td>Post #3</td>
+			<td>11-29-2020</td>
+			<td><a class="btn btn-sm btn-dark" href="#">View Post</a></td>
+		</tr>
+	</table>
+
+</div>
+
+{% endblock content %}

@@ -1,0 +1,42 @@
+{% extends 'base/main.html' %}
+
+{% block content %}
+
+<style type="text/css">
+	html, body{
+		height: 100%;
+	}
+
+	#page-wrapper{
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		background-color: #eaeaea;
+	}
+
+	#success-box{
+		max-width: 800px;
+		height: auto;
+		background-color: #fff;
+		border:1px solid #888;
+		border-radius: 5px;
+		padding: 15px;
+	}
+
+	#success-box p{
+		font-size: 18px;
+	}
+
+</style>
+
+<div id="page-wrapper">
+	<div id="success-box" class="content-block">
+		<h1>Thanks for reaching out!</h1>
+		<p>Your message was successfully sent. I will do my best to get back to you in a timely manner :)</p>
+		<a id="back-btn" class="btn btn-success" href="{% url 'home' %}">BACK TO HOME PAGE</a>
+	</div>
+</div>
+
+{% endblock content %}
