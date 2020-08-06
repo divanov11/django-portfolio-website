@@ -14,3 +14,4 @@ GETTING STARTED
 3 - Create superuser
     python manage.py createsuperuser
     
+![](static/images/personal-blog.jpg)
