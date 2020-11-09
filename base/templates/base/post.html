@@ -12,12 +12,73 @@
 		margin-top: 20px;
 		margin-bottom: 20px;
 	}
+
+	.post-container{
+			width: 900px;
+			margin: 0 auto;
+			padding-top: 20px;
+			padding-bottom: 20px;
+	}
+
+	.comments-wrapper{
+		margin-top: 50px;
+		padding: 10px;
+		border:1px solid var(--borderColor);
+		-webkit-box-shadow: -1px 1px 3px -1px rgba(0,0,0,0.75);
+		-moz-box-shadow: -1px 1px 3px -1px rgba(0,0,0,0.75);
+		box-shadow: -1px 1px 3px -1px rgba(0,0,0,0.75);
+	}
+
+	.comment{
+		display: flex;
+		padding: 15px;
+	}
+
+	.comment-author{
+		font-size: 14px;
+		font-weight: 700;
+		color: rgb(30, 174, 219) !important;
+		margin: 2px;
+	}
+
+	.author-pic{
+		width: 50px;
+		height: 50px;
+		border-radius: 50%;
+		margin-right: 10px;
+	}
+
+	.comment-body{
+
+		font-size: 14px;
+	}
+
+	@media screen and (max-width: 900px){
+		.post-container{
+			width: 95%;
+		}
+	}
 </style>
 
-<div class="main-container">
+<div class="post-container">
+	{% if messages %}
+		{% for message in messages %}
+			{% if message.tags == 'success' %}
+				<div class="alert alert-success" role="alert">
+					<span>{{message}}</span>					
+				</div>
+			{% elif message.tags == 'error' %}
+				<div class="alert alert-danger" role="alert">
+					<span>{{message}}</span>					
+				</div>
+			{% endif %}
+		{% endfor %}
+	{% endif %}
+
+
 	<a class="btn btn-sm btn-primary" href="{% url 'posts' %}">&laquo Back to Posts</a>
 
-	{% if request.user.is_authenticated %}
+	{% if request.user.is_staff %}
 		 <a class="btn btn-sm btn-primary" href="{% url 'update_post' post.slug %}">Edit</a>
 		 <a class="btn btn-sm btn-danger" href="{% url 'delete_post' post.slug %}">Delete</a>
 	{% endif %}
@@ -34,6 +95,41 @@
 	<br>
 
 	<p>{{post.body|safe}}</p>
+
+	<div class="comments-wrapper">
+		<h5>Comments: {{post.postcomment_set.all.count}}</h5>
+		<hr>
+		<!--
+			- Not logged in, output form and say "Register to comment and give room for a message"
+			- When given username 
+		-->
+
+		<form action="" method="POST">
+			{% csrf_token %}
+			<textarea required class="form-control" placeholder="Leave a comment..." name="comment"></textarea>
+			{% if request.user.is_authenticated == False %}
+				<br>
+				<input class="form-control" type="text" name="first_name" placeholder="Name..">
+				<br>
+				<input class="form-control" type="email" name="email" placeholder="Email..">
+				<br>
+				<input class="form-control" type="password" name="password" placeholder="Password..">
+			{% endif %}
+			<br>
+			<input class="btn btn-info" type="submit" value="Submit">
+		</form>
+
+		<hr>
+		{% for comment in post.postcomment_set.all %}
+			<div class="comment">
+				<img class="author-pic" src="{{comment.author.profile_pic}}">
+				<div>
+					<p class="comment-author">{{comment.author}}: {{comment.created|date:"M-d-Y"}}</p>
+					<p class="comment-body">{{comment.body}}</p>
+				</div>
+			</div>
+		{% endfor %}
+	</div>
 </div>
 
 {% endblock content %}

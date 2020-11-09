@@ -460,6 +460,35 @@ h6 { font-size: 16px;}
 }
 
 
+/* Login Page (START) */
+
+	#login-page-wrapper{
+		background: #eaeaea;
+		height: 100vh;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	#login-form-wrapper{
+		width: 400px;
+		background: #fff;
+		padding: 20px;
+		-webkit-box-shadow: -1px 1px 3px -1px rgba(0,0,0,0.75);
+		-moz-box-shadow: -1px 1px 3px -1px rgba(0,0,0,0.75);
+		box-shadow: -1px 1px 3px -1px rgba(0,0,0,0.75);
+	}
+
+	@media screen and (max-width: 400px){
+		#login-form-wrapper{
+			width: 95%;
+		}
+	}
+
+
+/* Login Page (END) */
+
+
 @media screen and (max-width: 1200px){
 	.main-container{
 		width: 95%;

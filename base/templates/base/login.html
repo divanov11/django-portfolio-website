@@ -1,0 +1,41 @@
+{% include 'base/main.html' %}
+{% load static %}
+{% block content %}
+
+
+<section id="login-page-wrapper">
+	<div id="login-form-wrapper">
+		{% if messages %}
+			{% for message in messages %}
+				{% if message.tags == 'success' %}
+					<div class="alert alert-success" role="alert">
+						<span>{{message}}</span>					
+					</div>
+				{% elif message.tags == 'error' %}
+					<div class="alert alert-danger" role="alert">
+						<span>{{message}}</span>					
+					</div>
+				{% endif %}
+			{% endfor %}
+		{% endif %}
+
+		<h3 style="text-align: center">Member Login</h3>
+		<hr>
+		<form method="POST">
+			{% csrf_token %}
+			<label>Email</label>
+			<input class="form-control" type="email" name="email">
+			<br>
+			<label>Password</label>
+			<input class="form-control" type="password" name="password">
+			<br>
+			<input class="btn btn-primary btn-lg btn-block" type="submit" value="Login">
+		</form>
+
+		<br>
+		<p>Dont have an account? <a href="{% url 'register' %}">Register</a></p>
+		<p>Forgot your password? <a href="{% url 'password_reset' %}">Reset</a></p>
+	</div>
+</section>
+
+{% endblock content %}

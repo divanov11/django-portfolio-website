@@ -16,12 +16,15 @@
 
 <div class="main-container">
 	<h1>Posts</h1>
-
+	{% if request.user.is_staff %}
+		<a class="btn btn-warning" href="{% url 'create_post' %}">Create Post</a>
+	{% endif %}
 	<form id="searchForm" method="GET">
 		{{myFilter.form|crispy}}
+		
 		<input class="btn btn-primary" type="submit" value="search">
 	</form>
-
+	<br>
 	<div class="post-wrapper">
 
 		{% for post in posts %}
@@ -33,7 +36,7 @@
 					<p class="post-intro">{{post.sub_headline}}</p>
 					<a href="{% url 'post' post.slug %}">Read More</a>
 
-					{% if request.user.is_authenticated %}
+					{% if request.user.is_staff %}
 						| <a href="{% url 'update_post' post.slug %}">Edit</a>
 						| <a href="{% url 'delete_post' post.slug %}">Delete</a>
 					{% endif %}

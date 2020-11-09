@@ -15,7 +15,9 @@
 		<h2  id="close-btn" style="text-align: center">X</h2>
 		<li><a href="{% url 'home' %}#contact">Contact</a></li>
 		{% if request.user.is_authenticated %}
-			<li><a href="{% url 'create_post' %}">Create Post</a></li>
+			<li><a href="{% url 'logout' %}">Logout</a></li>
+		{% else %}
+			<li><a href="{% url 'login' %}">Login</a></li>
 		{% endif %}
 	</ul>
 

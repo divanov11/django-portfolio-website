@@ -1,0 +1,39 @@
+{% include 'base/main.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+
+<style type="text/css">
+	
+</style>
+
+<section id="login-page-wrapper">
+	<div id="login-form-wrapper">
+		{% if messages %}
+			{% for message in messages %}
+				{% if message.tags == 'success' %}
+					<div class="alert alert-success" role="alert">
+						<span>{{message}}</span>					
+					</div>
+				{% elif message.tags == 'error' %}
+					<div class="alert alert-danger" role="alert">
+						<span>{{message}}</span>					
+					</div>
+				{% endif %}
+			{% endfor %}
+		{% endif %}
+
+		<h3 style="text-align: center">Register Account</h3>
+		<hr>
+		<form method="POST">
+			{% csrf_token %}
+			{{form|crispy}}
+			<input class="btn btn-primary btn-lg btn-block" type="submit" value="Login">
+		</form>
+
+		<br>
+		<p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+	</div>
+</section>
+
+{% endblock content %}

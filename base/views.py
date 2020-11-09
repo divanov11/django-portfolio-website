@@ -2,15 +2,19 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
 from django.core.mail import EmailMessage
 from django.conf import settings
 from django.template.loader import render_to_string
+from django.contrib.auth.models import User
+from django.contrib import messages
+from django.contrib.auth import logout, login, authenticate
+from django.contrib.auth.forms import UserCreationForm
+from .decorators import *
 
-from .forms import PostForm
+from .forms import PostForm, CustomUserCreationForm
 from .filters import PostFilter
 
-from .models import Post
+from .models import *
 
 # Create your views here.
 
@@ -42,6 +46,32 @@ def posts(request):
 def post(request, slug):
 	post = Post.objects.get(slug=slug)
 
+	if request.method == 'POST':
+		try:
+			if request.user.is_authenticated:
+				user = request.user
+			else:
+				user = User.objects.create(
+					username=request.POST['email'],
+					email=request.POST['email'],
+					first_name=request.POST['first_name'],
+					)
+				user.set_password(request.POST['password'])
+				user.save()
+				login(request, user)
+				messages.success(request, "Account was successfully created, you are now logged in.")
+
+			PostComment.objects.create(
+				author=user.profile,
+				post=post,
+				body=request.POST['comment']
+				)
+			messages.success(request, "You're comment was successfuly posted!")
+		except:
+			messages.error(request, "Email OR username already exist...")
+		return redirect('post', slug=post.slug)
+
+
 	context = {'post':post}
 	return render(request, 'base/post.html', context)
 
@@ -49,6 +79,7 @@ def profile(request):
 	return render(request, 'base/profile.html')
 
 #CRUD VIEWS
+@admin_only
 @login_required(login_url="home")
 def createPost(request):
 	form = PostForm()
@@ -63,6 +94,7 @@ def createPost(request):
 	return render(request, 'base/post_form.html', context)
 
 
+@admin_only
 @login_required(login_url="home")
 def updatePost(request, slug):
 	post = Post.objects.get(slug=slug)
@@ -77,6 +109,7 @@ def updatePost(request, slug):
 	context = {'form':form}
 	return render(request, 'base/post_form.html', context)
 
+@admin_only
 @login_required(login_url="home")
 def deletePost(request, slug):
 	post = Post.objects.get(slug=slug)
@@ -110,3 +143,42 @@ def sendEmail(request):
 		email.send()
 
 	return render(request, 'base/email_sent.html')
+
+def loginPage(request):
+
+	if request.method == 'POST':
+		email = request.POST.get('email')
+		password =request.POST.get('password')
+
+		#Little Hack to work around re-building the usermodel
+		user = User.objects.get(email=email)
+		user = authenticate(request, username=user.username, password=password)
+
+		if user is not None:
+			login(request, user)
+			return redirect('home')
+		else:
+			messages.error(request, 'Email OR password is incorrect')
+
+	context = {}
+	return render(request, 'base/login.html', context)
+
+def registerPage(request):
+	form = CustomUserCreationForm()
+	if request.method == 'POST':
+		form = CustomUserCreationForm(request.POST)
+		if form.is_valid():
+			user = form.save(commit=False)
+			user.username = request.POST['email']
+			form.save()
+			messages.success(request, 'Account successfuly created!')
+			return redirect('login')
+		else:
+			messages.error(request, 'An error has occured with registration')
+	context = {'form':form}
+	return render(request, 'base/register.html', context)
+
+def logoutUser(request):
+	logout(request)
+	return redirect('home')
+
