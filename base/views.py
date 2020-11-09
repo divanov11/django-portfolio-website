@@ -151,9 +151,13 @@ def loginPage(request):
 		password =request.POST.get('password')
 
 		#Little Hack to work around re-building the usermodel
-		user = User.objects.get(email=email)
-		user = authenticate(request, username=user.username, password=password)
-
+		try:
+			user = User.objects.get(email=email)
+			user = authenticate(request, username=user.username, password=password)
+		except:
+			messages.error(request, 'User with this email does not exists')
+			return redirect('login')
+			
 		if user is not None:
 			login(request, user)
 			return redirect('home')
@@ -181,4 +185,11 @@ def registerPage(request):
 def logoutUser(request):
 	logout(request)
 	return redirect('home')
+
+@login_required(login_url="home")
+def userAccount(request):
+	profile = request.user.profile
+
+	context = {'profile':profile}
+	return render(request, 'base/account.html', context)
 

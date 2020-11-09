@@ -1,0 +1,69 @@
+{% include 'base/main.html' %}
+{% load static %}
+{% block content %}
+
+<style type="text/css">
+	#user_pic{
+		height: 200px;
+		width: 200px;
+		border-radius: 50%;
+		border:5px solid #888;
+		margin:0 auto;
+	}
+
+	#user-info-box{
+		text-align: center;
+	}
+</style>
+
+<div class="main-container">
+	<br>
+	<div class="row">
+		<div class="col-md-4">
+			<div class="card card-body" id="user-info-box">
+				<img id="user_pic" src="{{profile.profile_pic.url}}">
+				<br>
+				<h2>{{profile}}</h2>
+				<p>Email: {{profile.email}}</p>
+				<hr>
+				<p>{{profile.bio}}</p>
+				<hr>
+				<a class="btn btn-info btn-block" href="">Edit Profile</a>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<div class="card card-body">
+				<h3>My Orders:</h3>
+				<hr>
+				<table class="table">
+					<thead class="thead-dark">
+						<tr>
+							<th>Transaction ID</th>
+							<th>Date</th>
+							<th>Items</th>
+							<th>Total</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tr>
+						<td>122523462</td>
+						<td>11-24-2020</td>
+						<td>2</td>
+						<td>$12.18</td>
+						<td><a class="btn btn-dark btn-sm" href="">View Order</a></td>
+					</tr>
+
+					<tr>
+						<td>122523123</td>
+						<td>11-29-2020</td>
+						<td>7</td>
+						<td>$53.65</td>
+						<td><a class="btn btn-dark btn-sm" href="">View Order</a></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock content %}

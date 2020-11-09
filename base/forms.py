@@ -7,9 +7,10 @@ from .models import Post
 
 
 class CustomUserCreationForm(UserCreationForm):
+
 	class Meta:
 		model = User
-		fields = ['email', 'password1', 'password2']
+		fields = ['first_name', 'last_name', 'email', 'password1', 'password2']
 
 class PostForm(ModelForm):
 
