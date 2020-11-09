@@ -11,7 +11,7 @@ from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from .decorators import *
 
-from .forms import PostForm, CustomUserCreationForm
+from .forms import PostForm, CustomUserCreationForm, ProfileForm, UserForm
 from .filters import PostFilter
 
 from .models import *
@@ -193,3 +193,21 @@ def userAccount(request):
 	context = {'profile':profile}
 	return render(request, 'base/account.html', context)
 
+@login_required(login_url="home")
+def updateProfile(request):
+	user = request.user
+	profile = user.profile
+	form = ProfileForm(instance=profile)
+	if request.method == 'POST':
+		user_form = UserForm(request.POST, instance=user)
+		if user_form.is_valid():
+			user_form.save()
+
+		form = ProfileForm(request.POST, request.FILES, instance=profile)
+		if form.is_valid():
+			form.save()
+			return redirect('account')
+
+
+	context = {'form':form}
+	return render(request, 'base/profile_form.html', context)

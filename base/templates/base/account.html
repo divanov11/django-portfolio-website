@@ -9,6 +9,7 @@
 		border-radius: 50%;
 		border:5px solid #888;
 		margin:0 auto;
+		object-fit: cover;
 	}
 
 	#user-info-box{
@@ -28,7 +29,7 @@
 				<hr>
 				<p>{{profile.bio}}</p>
 				<hr>
-				<a class="btn btn-info btn-block" href="">Edit Profile</a>
+				<a class="btn btn-info btn-block" href="{% url 'update_profile' %}">Edit Profile</a>
 			</div>
 		</div>
 		<div class="col-md-8">

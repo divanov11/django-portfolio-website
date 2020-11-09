@@ -122,7 +122,7 @@
 		<hr>
 		{% for comment in post.postcomment_set.all %}
 			<div class="comment">
-				<img class="author-pic" src="{{comment.author.profile_pic}}">
+				<img class="author-pic" src="{{comment.author.profile_pic.url}}">
 				<div>
 					<p class="comment-author">{{comment.author}}: {{comment.created|date:"M-d-Y"}}</p>
 					<p class="comment-body">{{comment.body}}</p>

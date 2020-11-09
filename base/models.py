@@ -14,7 +14,7 @@ class Profile(models.Model):
 	first_name = models.CharField(max_length=200, blank=True, null=True)
 	last_name = models.CharField(max_length=200, blank=True, null=True)
 	email = models.CharField(max_length=200)
-	profile_pic = models.ImageField(null=True, blank=True, upload_to="images", default="/placeholder.png")
+	profile_pic = models.ImageField(null=True, blank=True, upload_to="images", default="/user.png")
 	bio = models.TextField(null=True, blank=True)
 	twitter = models.CharField(max_length=200,null=True, blank=True)
 
@@ -63,8 +63,8 @@ class Post(models.Model):
 
 
 class PostComment(models.Model):
-	author = models.ForeignKey(Profile, on_delete=models.SET_NULL, null=True, blank=True)
-	post = models.ForeignKey(Post, on_delete=models.SET_NULL, null=True, blank=True)
+	author = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True, blank=True)
+	post = models.ForeignKey(Post, on_delete=models.CASCADE, null=True, blank=True)
 	body = models.TextField(null=True, blank=True)
 	created = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
