@@ -47,28 +47,13 @@ def post(request, slug):
 	post = Post.objects.get(slug=slug)
 
 	if request.method == 'POST':
-		try:
-			if request.user.is_authenticated:
-				user = request.user
-			else:
-				user = User.objects.create(
-					username=request.POST['email'],
-					email=request.POST['email'],
-					first_name=request.POST['first_name'],
-					)
-				user.set_password(request.POST['password'])
-				user.save()
-				login(request, user)
-				messages.success(request, "Account was successfully created, you are now logged in.")
+		PostComment.objects.create(
+			author=request.user.profile,
+			post=post,
+			body=request.POST['comment']
+			)
+		messages.success(request, "You're comment was successfuly posted!")
 
-			PostComment.objects.create(
-				author=user.profile,
-				post=post,
-				body=request.POST['comment']
-				)
-			messages.success(request, "You're comment was successfuly posted!")
-		except:
-			messages.error(request, "Email OR username already exist...")
 		return redirect('post', slug=post.slug)
 
 
@@ -175,7 +160,6 @@ def registerPage(request):
 		form = CustomUserCreationForm(request.POST)
 		if form.is_valid():
 			user = form.save(commit=False)
-			user.username = request.POST['email']
 			user.save()
 			messages.success(request, 'Account successfuly created!')
 

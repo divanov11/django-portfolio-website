@@ -61,20 +61,6 @@
 </style>
 
 <div class="post-container">
-	{% if messages %}
-		{% for message in messages %}
-			{% if message.tags == 'success' %}
-				<div class="alert alert-success" role="alert">
-					<span>{{message}}</span>					
-				</div>
-			{% elif message.tags == 'error' %}
-				<div class="alert alert-danger" role="alert">
-					<span>{{message}}</span>					
-				</div>
-			{% endif %}
-		{% endfor %}
-	{% endif %}
-
 
 	<a class="btn btn-sm btn-primary" href="{% url 'posts' %}">&laquo Back to Posts</a>
 
@@ -103,21 +89,17 @@
 			- Not logged in, output form and say "Register to comment and give room for a message"
 			- When given username 
 		-->
-
+		{% if request.user.is_authenticated %}
 		<form action="" method="POST">
 			{% csrf_token %}
 			<textarea required class="form-control" placeholder="Leave a comment..." name="comment"></textarea>
-			{% if request.user.is_authenticated == False %}
-				<br>
-				<input class="form-control" type="text" name="first_name" placeholder="Name..">
-				<br>
-				<input class="form-control" type="email" name="email" placeholder="Email..">
-				<br>
-				<input class="form-control" type="password" name="password" placeholder="Password..">
-			{% endif %}
 			<br>
 			<input class="btn btn-info" type="submit" value="Submit">
 		</form>
+		{% else %}
+			<p>Create an account to comment:</p>
+			<a class="btn btn-primary" href="{% url 'register' %}">Register/Login</a>
+		{% endif %}
 
 		<hr>
 		{% for comment in post.postcomment_set.all %}
