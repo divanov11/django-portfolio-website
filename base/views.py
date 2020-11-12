@@ -145,6 +145,8 @@ def sendEmail(request):
 	return render(request, 'base/email_sent.html')
 
 def loginPage(request):
+	if request.user.is_authenticated:
+		return redirect('home')
 
 	if request.method == 'POST':
 		email = request.POST.get('email')
@@ -174,9 +176,18 @@ def registerPage(request):
 		if form.is_valid():
 			user = form.save(commit=False)
 			user.username = request.POST['email']
-			form.save()
+			user.save()
 			messages.success(request, 'Account successfuly created!')
-			return redirect('login')
+
+			user = authenticate(request, username=user.username, password=request.POST['password1'])
+
+			if user is not None:
+				login(request, user)
+
+			next_url = request.GET.get('next')
+			if next_url == '' or next_url == None:
+				next_url = 'home'
+			return redirect(next_url)
 		else:
 			messages.error(request, 'An error has occured with registration')
 	context = {'form':form}
