@@ -69,7 +69,11 @@
 		 <a class="btn btn-sm btn-danger" href="{% url 'delete_post' post.slug %}">Delete</a>
 	{% endif %}
 
-	<img class="featured_image" src="{{post.thumbnail.url}}">
+	{% if post.thumbnail %}
+		<img class="featured_image" src="{{post.thumbnail.url}}" />
+	{% else %}
+		<img class="featured_image" src={% static '/images/placeholder.png' %} />
+	{% endif %} 
 
 	{% for tag in post.tags.all %}
 		<span class="tag">{{tag}}</span>
