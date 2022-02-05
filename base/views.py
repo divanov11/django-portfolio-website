@@ -158,12 +158,22 @@ def registerPage(request):
 	form = CustomUserCreationForm()
 	if request.method == 'POST':
 		form = CustomUserCreationForm(request.POST)
+		
 		if form.is_valid():
-			user = form.save(commit=False)
-			user.save()
-			messages.success(request, 'Account successfuly created!')
+			user = form.save()
+			user.refresh_from_db()
 
-			user = authenticate(request, username=user.username, password=request.POST['password1'])
+			user.profile.first_name = form.cleaned_data.get('first_name')
+			user.profile.last_name = form.cleaned_data.get('last_name')
+			user.profile.email = form.cleaned_data.get('email')
+
+			user.save()
+			password = form.cleaned_data.get('password1')
+
+			messages.success(request, 'Account successfuly created!')
+			#Each field in a Form class is responsible not only for validating data, but also for “cleaning” it – normalizing it to a consistent format.
+			#This is a nice feature, because it allows data for a particular field to be input in a variety of ways, always resulting in consistent output.
+			user = authenticate(request, username=user.username, password=password)
 
 			if user is not None:
 				login(request, user)
